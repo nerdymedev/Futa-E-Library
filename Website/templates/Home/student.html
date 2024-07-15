@@ -1,0 +1,55 @@
+{% extends "components/nav.html" %}
+
+{% block content %}
+<div class="container mx-auto pt-20">
+   
+
+    <!-- User Type Selector -->
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-6 flex items-center space-x-4">
+        <label for="userType" class="text-gray-700">Add User As:</label>
+        <select id="userType" class="w-32 p-2 border rounded-lg">
+            <option value="student">Student</option>
+            <option value="staff">Staff</option>
+        </select>
+    </div>
+
+    <!-- User Registration Form -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <form action="/add_user" method="POST" class="space-y-4">
+            <div>
+                <label for="email" class="block text-gray-700">Email</label>
+                <input type="email" id="email" name="email" class="w-full p-2 border rounded-lg" required>
+            </div>
+            <div>
+                <label for="reg_no" class="block text-gray-700">Registration Number</label>
+                <input type="text" id="reg_no" name="reg_no" class="w-full p-2 border rounded-lg" required>
+            </div>
+            <div>
+                <label for="surname" class="block text-gray-700">Surname</label>
+                <input type="text" id="surname" name="surname" class="w-full p-2 border rounded-lg" required>
+            </div>
+            <div>
+                <label for="other_names" class="block text-gray-700">Other Names</label>
+                <input type="text" id="other_names" name="other_names" class="w-full p-2 border rounded-lg" required>
+            </div>
+            <div>
+                <label for="department" class="block text-gray-700">Department</label>
+                <input type="text" id="department" name="department" class="w-full p-2 border rounded-lg" required>
+            </div>
+            <div>
+                <label for="level" class="block text-gray-700">Level</label>
+                <input type="number" id="level" name="level" class="w-full p-2 border rounded-lg" required>
+            </div>
+            <div>
+                <label for="year" class="block text-gray-700">Year</label>
+                <input type="number" id="year" name="year" class="w-full p-2 border rounded-lg" required>
+            </div>
+            <div>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Add User</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
+   

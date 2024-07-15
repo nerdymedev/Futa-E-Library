@@ -1,0 +1,73 @@
+{% extends "components/nav.html" %}
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">User Profile</h1>
+    <div class="bg-white shadow-md rounded p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">Personal Information</h2>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="togglePasswordModal()">Change Password</button>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Email:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ user.email }}</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Registration Number:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ user.reg_no }}</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Surname:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ user.surname }}</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Other Names:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ user.other_names }}</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Department:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ user.department }}</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Level:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ user.level }}</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Year:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ user.year }}</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Role:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ user.role }}</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Password Changed:</label>
+            <p class="p-2 bg-gray-100 rounded">{{ 'Yes' if user.password_changed else 'No' }}</p>
+        </div>
+    </div>
+</div>
+<script>
+    function togglePasswordModal() {
+        document.getElementById('passwordModal').classList.toggle('hidden');
+    }
+</script>
+<!-- Change Password Modal -->
+<div id="passwordModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded shadow-md w-1/3">
+        <h2 class="text-xl font-semibold mb-4">Change Password</h2>
+        <form action="{{ url_for('views.change_password') }}" method="POST">
+            <div class="mb-4">
+                <label class="block text-gray-700">New Password:</label>
+                <input type="password" name="new_password" class="p-2 border border-gray-300 rounded w-full" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Confirm Password:</label>
+                <input type="password" name="confirm_password" class="p-2 border border-gray-300 rounded w-full" required>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2" onclick="togglePasswordModal()">Cancel</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Change Password</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
