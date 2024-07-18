@@ -26,9 +26,12 @@ def create_app():
     from .views import views
     from .auth import auth  
     from .email import email
+    from .borrow import borrow
+    
+    
+    app.register_blueprint(borrow,url_prefix='/')
     app.register_blueprint(email,url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
-    
     app.register_blueprint(views, url_prefix='/')
     
     admin = Admin(app)

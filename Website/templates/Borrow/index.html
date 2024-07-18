@@ -1,0 +1,85 @@
+{% extends "components/nav.html" %}
+
+{% block content %}
+<div class="container mx-auto pt-20">
+    <form action="/process_borrow_request" method="POST" class="space-y-6 bg-white p-8 rounded-lg shadow-lg">
+        <!-- User Registration Number -->
+        <div class="mb-6">
+            <label for="reg_no" class="block text-gray-700 font-semibold mb-2">User Registration Number</label>
+            <input type="text" id="reg_no" name="reg_no" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Enter registration number" required>
+        </div>
+        
+        <!-- Load User Details Button -->
+        <div class="mb-6">
+            <button type="button" id="loadDetails" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                Load User Details
+            </button>
+        </div>
+        
+        <!-- User Details Section (to be dynamically filled) -->
+        <div id="userDetails" class="mb-6 hidden space-y-4">
+            <!-- User details will be populated here -->
+        </div>
+        
+        <!-- Book Details -->
+        <div class="mb-6">
+            <label for="book_title" class="block text-gray-700 font-semibold mb-2">Book Title</label>
+            <input type="text" id="book_title" name="book_title" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Enter book title" required>
+        </div>
+        
+        <!-- Borrow Request Submit Button -->
+        <div class="mb-6">
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                Submit Borrow Request
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('loadDetails').addEventListener('click', function() {
+        const regNo = document.getElementById('reg_no').value;
+        if (regNo) {
+            // Make an AJAX request to get user details
+            fetch(`/get_user?reg_no=${regNo}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        alert('User not found.');
+                        return;
+                    }
+                    // Populate the user details section with read-only inputs
+                    const userDetailsDiv = document.getElementById('userDetails');
+                    userDetailsDiv.innerHTML = `
+                        <h3 class="text-lg font-semibold text-gray-700">User Details</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700">Name</label>
+                                <input type="text" value="${data.name}" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700">Email</label>
+                                <input type="text" value="${data.email}" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700">Department</label>
+                                <input type="text" value="${data.department}" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700">Level</label>
+                                <input type="text" value="${data.level}" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed" readonly>
+                            </div>
+                        </div>
+                    `;
+                    userDetailsDiv.classList.remove('hidden');
+                })
+                .catch(error => console.error('Error fetching user details:', error));
+        }
+    });
+</script>
+{% endblock %}

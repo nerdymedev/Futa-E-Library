@@ -41,4 +41,4 @@ def change_password():
 @views.route('/borrowed_book')
 @lr
 def borrowed_book():
-    return render_template('Profile/borrow.html')
+    return render_template('Borrow/index.html')
