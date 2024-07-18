@@ -2,12 +2,14 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, current_app
 from .models import User
 from . import db
+from flask_login import login_required
 from werkzeug.security import generate_password_hash
 import string
 
 email = Blueprint('email', __name__)
 
 @email.route('/add_user', methods=['GET', 'POST'])
+@login_required
 def add_user():
     if request.method == 'POST':
         email_address = request.form.get('email')

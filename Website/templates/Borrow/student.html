@@ -1,49 +1,65 @@
-{% extends "base.html" %}
+{% extends "components/nav.html" %}
 
 {% block content %}
-<h1>Student Dashboard</h1>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl font-semibold text-gray-900">Student Dashboard</h1>
 
-{% if borrow_requests %}
-    <div class="mt-4">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Book Title
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                    </th>
-                    <th scope="col" class="relative px-6 py-3">
-                        <span class="sr-only">Accept Request</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                {% for request in borrow_requests %}
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ request.book.title }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ 'bg-yellow-100 text-yellow-800' if request.status == 'pending' else 'bg-green-100 text-green-800' }}">
-                                {{ request.status.capitalize() }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            {% if request.status == 'pending' %}
-                                <a href="{{ url_for('borrow.accept_request', request_id=request.id) }}" class="text-indigo-600 hover:text-indigo-900">Accept Request</a>
-                            {% else %}
-                                <span class="text-gray-400">Already Accepted</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% else %}
-    <p>No pending borrow requests found.</p>
-{% endif %}
-
+    {% if borrow_requests %}
+        <div class="mt-6">
+            <div class="overflow-hidden border border-gray-200 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Book Title
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for request in borrow_requests %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ request.book_title }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        {% if request.status == 'pending' %}
+                                            bg-yellow-100 text-yellow-800
+                                        {% else %}
+                                            bg-green-100 text-green-800
+                                        {% endif %}
+                                    ">
+                                        {{ request.status.capitalize() }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    {% if request.status == 'Pending' %}
+                                        <div class="flex space-x-4">
+                                            <form action="{{ url_for('borrow.accept_request', request_id=request.id) }}" method="post">
+                                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Accept</button>
+                                            </form>
+                                            <form action="{{ url_for('borrow.decline_request', request_id=request.id) }}" method="post">
+                                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Decline</button>
+                                            </form>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-gray-400">{{ request.status.capitalize() }}</span>
+                                    {% endif %}
+                                </td>                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <p class="mt-8 text-gray-800 text-lg">No borrowed books.</p>
+    {% endif %}
+</div>
 {% endblock %}
