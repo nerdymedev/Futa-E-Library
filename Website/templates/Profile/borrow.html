@@ -1,0 +1,70 @@
+{% extends "components/nav.html" %}
+
+{% block content %}
+<div class="container mx-auto pt-20">
+    <form action="/process_borrow_request" method="POST" class="space-y-6 bg-white p-8 rounded-lg shadow-lg">
+        <!-- User Registration Number -->
+        <div class="mb-6">
+            <label for="reg_no" class="block text-gray-700 font-semibold mb-2">User Registration Number</label>
+            <input type="text" id="reg_no" name="reg_no" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Enter registration number" required>
+        </div>
+        
+        <!-- Load User Details Button -->
+        <div class="mb-6">
+            <button type="button" id="loadDetails" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                Load User Details
+            </button>
+        </div>
+        
+        <!-- User Details Section (to be dynamically filled) -->
+        <div id="userDetails" class="mb-6 hidden">
+            <!-- User details will be populated here -->
+        </div>
+        
+        <!-- Book Name -->
+        <div class="mb-6">
+            <label for="book_name" class="block text-gray-700 font-semibold mb-2">Book Name</label>
+            <input type="text" id="book_name" name="book_name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Enter book name" required>
+        </div>
+        
+        <!-- Borrow Request Submit Button -->
+        <div class="mb-6">
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                Submit Borrow Request
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('loadDetails').addEventListener('click', function() {
+        const regNo = document.getElementById('reg_no').value;
+        if (regNo) {
+            // Make an AJAX request to get user details (this part needs server-side implementation)
+            fetch(`/get_user_details?reg_no=${regNo}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate the user details section
+                    const userDetailsDiv = document.getElementById('userDetails');
+                    userDetailsDiv.innerHTML = `
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <h3 class="text-gray-700 font-semibold mb-2">User Details</h3>
+                            <p><strong>Email:</strong> ${data.email}</p>
+                            <p><strong>Name:</strong> ${data.name}</p>
+                            <p><strong>Department:</strong> ${data.department}</p>
+                            <p><strong>Level:</strong> ${data.level}</p>
+                            <p><strong>Year:</strong> ${data.year}</p>
+                        </div>
+                    `;
+                    userDetailsDiv.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error fetching user details:', error);
+                    alert('Could not load user details. Please try again.');
+                });
+        } else {
+            alert('Please enter a registration number.');
+        }
+    });
+</script>
+{% endblock content %}

@@ -18,7 +18,7 @@ def login():
 
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
-            if user.role in ['Super Admin', 'Admin']:
+            if user.role in ['Super Admin', 'admin']:
                 flash(f'Successfully logged in as {user.role}', 'success')
                 return redirect(url_for('views.home'))  
             elif user.role == 'student':

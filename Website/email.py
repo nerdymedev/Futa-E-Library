@@ -18,16 +18,17 @@ def add_user():
         level = request.form.get('level')
         year = request.form.get('year')
         user_type = request.form.get('userType')
+        print(user_type)
 
         # Check if email or registration number already exists
         if User.query.filter_by(email=email_address).first() or User.query.filter_by(reg_no=reg_no).first():
             flash('Email or Registration Number already exists.', 'danger')
             return redirect(url_for('email.add_user'))
 
-        # Determine the role based on user type
+        
         role = 'admin' if user_type == 'staff' else 'student'
 
-        # Set password to surname in uppercase
+       
         password = surname.upper()
         password_hash = generate_password_hash(password)
 

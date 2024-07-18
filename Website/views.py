@@ -10,7 +10,9 @@ views = Blueprint('views', __name__)
 @views.route('/')
 @lr
 def home():
-    return render_template('/Home/index.html')
+    user=current_user
+    print(user.role)
+    return render_template('/Home/index.html',user=user)
 
 @views.route('/profile',methods=['GET','POST'])
 @lr
@@ -35,3 +37,8 @@ def change_password():
     
     flash('Password changed successfully!', 'success')
     return redirect(url_for('views.profile_page'))
+
+@views.route('/borrowed_book')
+@lr
+def borrowed_book():
+    return render_template('Profile/borrow.html')

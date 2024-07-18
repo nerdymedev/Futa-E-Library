@@ -27,16 +27,13 @@
             max-width: 300px;
             transition: all 0.5s ease-in-out;
         }
-
-        input,select{
+        input,select {
             outline: none;
             border: 1.5px solid rgba(59, 130, 246);
         }
-
-        input:focus{
+        input:focus {
             outline: none;
             border: 1.5px solid rgba(59, 130, 246);
-
         }
     </style>
     {% block style %}{% endblock style %}
@@ -63,11 +60,12 @@
                     <div class="hidden sm:block sm:ml-6">
                         <div class="flex space-x-4">
                             <a href="/" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                            <a href="/add_user" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"> Registration</a>
+                        {% if current_user.is_authenticated and current_user.role in ['admin','Super Admin'] %}
+                            <a href="/add_user" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Registration</a>
+                          {% endif  %}
                             <a href="/profile" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
-                            <a href="#" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Favourites</a>
-                            <a href="#" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Search Books</a>
-                            <a href="#" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Borrowed Books</a>
+                            <a href="/favourite" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Favourites</a>
+                            <a href="/upload" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Borrowed Book</a>
                             <a href="/logout" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
                         </div>
                     </div>
@@ -77,32 +75,32 @@
         <div class="sm:hidden hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="/" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
-                <a href="/add_user" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"> Registration</a>
+                {% if current_user.is_authenticated and current_user.role in ['admin','Super Admin']  %}
+                <a href="/add_user" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Registration</a>
+                {% endif %}
                 <a href="/profile" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
-                <a href="#" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Favourites</a>
-                <a href="#" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Search Books</a>
-                <a href="#" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Borrowed Books</a>
+                <a href="/favourite" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Favourites</a>
+                <a href="/upload" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Borrowed Book</a>
                 <a href="/logout" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
-
             </div>
         </div>
     </nav>
-     <!-- Flash Messages -->
-     {% with messages = get_flashed_messages(with_categories=true) %}
-     {% if messages %}
-         <div class="flash-message space-y-2">
-             {% for category, message in messages %}
-                 <div class="bg-{{ 'green' if category == 'success' else 'red' }}-100 border border-{{ 'green' if category == 'success' else 'red' }}-400 text-{{ 'green' if category == 'success' else 'red' }}-700 px-4 py-3 rounded relative" role="alert">
-                     <strong class="font-bold">{{ category | capitalize }}</strong>
-                     <span class="block sm:inline">{{ message }}</span>
-                     <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                         <svg class="fill-current h-6 w-6 text-{{ 'green' if category == 'success' else 'red' }}-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" onclick="this.parentElement.parentElement.style.display='none';"><title>Close</title><path d="M14.348 5.652a.5.5 0 1 0-.696-.718L10 9.282l-3.652-4.348a.5.5 0 0 0-.696.718l4 4.75a.5.5 0 0 0 .696 0l4-4.75z"/></svg>
-                     </span>
-                 </div>
-             {% endfor %}
-         </div>
-     {% endif %}
- {% endwith %}
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-message space-y-2">
+            {% for category, message in messages %}
+                <div class="bg-{{ 'green' if category == 'success' else 'red' }}-100 border border-{{ 'green' if category == 'success' else 'red' }}-400 text-{{ 'green' if category == 'success' else 'red' }}-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">{{ category | capitalize }}</strong>
+                    <span class="block sm:inline">{{ message }}</span>
+                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                        <svg class="fill-current h-6 w-6 text-{{ 'green' if category == 'success' else 'red' }}-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" onclick="this.parentElement.parentElement.style.display='none';"><title>Close</title><path d="M14.348 5.652a.5.5 0 1 0-.696-.718L10 9.282l-3.652-4.348a.5.5 0 0 0-.696.718l4 4.75a.5.5 0 0 0 .696 0l4-4.75z"/></svg>
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
     {% block content %}
     
     {% endblock content %}
