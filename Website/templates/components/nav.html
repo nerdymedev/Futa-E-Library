@@ -62,6 +62,8 @@
                             <a href="/" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
                         {% if current_user.is_authenticated and current_user.role in ['admin','Super Admin'] %}
                             <a href="/add_user" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Registration</a>
+                            <a href="/return_book" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-sm font-medium">Recieved</a>
+
                           {% endif  %}
                             <a href="/profile" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
                             <a href="/favourite" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Favourites</a>
@@ -86,10 +88,20 @@
                 <a href="/" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
                 {% if current_user.is_authenticated and current_user.role in ['admin','Super Admin']  %}
                 <a href="/add_user" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Registration</a>
+                <a href="/return_book" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Recieved</a>
                 {% endif %}
                 <a href="/profile" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
                 <a href="/favourite" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Favourites</a>
-                <a href="/upload" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Borrowed Book</a>
+                {% if current_user.is_authenticated %}
+                    {% set url = url_for('views.borrowed_book') if current_user.role in ['admin', 'Super Admin'] else url_for('borrow.student_dashboard') %}
+                    <a href="{{ url }}" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                        {% if current_user.role in ['admin', 'super admin'] %}
+                            Borrowed Book
+                        {% else %}
+                            Borrowed Book
+                        {% endif %}
+                    </a>
+                    {% endif %}
                 <a href="/logout" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
             </div>
         </div>
