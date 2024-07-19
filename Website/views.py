@@ -1,6 +1,6 @@
 from flask import Flask,Blueprint,render_template,url_for,request,redirect,flash
 from flask_login import login_required as lr
-from .models import User
+from .models import User,Upload
 from flask_login import current_user
 from werkzeug.security import generate_password_hash
 from . import db
@@ -11,8 +11,8 @@ views = Blueprint('views', __name__)
 @lr
 def home():
     user=current_user
-    print(user.role)
-    return render_template('/Home/index.html',user=user)
+    document = Upload.query.all()
+    return render_template('/Home/index.html',user=user,documents=document)
 
 @views.route('/profile',methods=['GET','POST'])
 @lr

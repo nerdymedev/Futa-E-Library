@@ -8,6 +8,8 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash
 from flask_admin import Admin
+import firebase_admin
+from firebase_admin import credentials, storage
 
 
 db = SQLAlchemy()
@@ -19,7 +21,11 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_default_secret_key')
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
+     # Initialize Firebase
+    cred = credentials.Certificate('secret.json')
+    firebase_admin.initialize_app(cred, {
+        'storageBucket': 'local-market-6b270.appspot.com'
+    })
     db.init_app(app)
     migrate.init_app(app, db)
     
@@ -27,12 +33,15 @@ def create_app():
     from .auth import auth  
     from .email import email
     from .borrow import borrow
+    from .upload import upload
     
+       
     
     app.register_blueprint(borrow,url_prefix='/')
     app.register_blueprint(email,url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(upload,url_prefix='/')
     
     admin = Admin(app)
     

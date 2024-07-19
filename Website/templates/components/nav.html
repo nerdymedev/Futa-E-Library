@@ -27,10 +27,7 @@
             max-width: 300px;
             transition: all 0.5s ease-in-out;
         }
-        input,select {
-            outline: none;
-            border: 1.5px solid rgba(59, 130, 246);
-        }
+       
         input:focus {
             outline: none;
             border: 1.5px solid rgba(59, 130, 246);
@@ -66,7 +63,6 @@
 
                           {% endif  %}
                             <a href="/profile" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
-                            <a href="/favourite" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Favourites</a>
                             {% if current_user.is_authenticated %}
                                 {% set url = url_for('views.borrowed_book') if current_user.role in ['admin', 'Super Admin'] else url_for('borrow.student_dashboard') %}
                                 <a href="{{ url }}" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
@@ -91,7 +87,6 @@
                 <a href="/return_book" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Recieved</a>
                 {% endif %}
                 <a href="/profile" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
-                <a href="/favourite" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Favourites</a>
                 {% if current_user.is_authenticated %}
                     {% set url = url_for('views.borrowed_book') if current_user.role in ['admin', 'Super Admin'] else url_for('borrow.student_dashboard') %}
                     <a href="{{ url }}" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">

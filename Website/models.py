@@ -18,13 +18,16 @@ class User(db.Model,UserMixin):
     def get_id(self):
         return str(self.id)
     
-class Book(db.Model):
+class Upload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    isbn = db.Column(db.String(20), unique=True, nullable=False)
-    author = db.Column(db.String(200), nullable=False)
-    publisher = db.Column(db.String(200), nullable=False)
-    year = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(300), nullable=False)
+    isbn = db.Column(db.String(300), nullable=True)
+    file_url = db.Column(db.String(500), nullable=False)
+    file_type = db.Column(db.String(50), nullable=False)
+    author = db.Column(db.String(300), nullable=True)
+    publisher = db.Column(db.String(300), nullable=True)
+    year = db.Column(db.Integer, nullable=True)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 class BorrowRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
