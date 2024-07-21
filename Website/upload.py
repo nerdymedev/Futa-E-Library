@@ -16,6 +16,7 @@ def upload_file():
     author = request.form.get('author')
     publisher = request.form.get('publisher')
     year = request.form.get('year')
+    department = request.form.get('department')
 
     # Upload file to Firebase Storage
     bucket = storage.bucket()
@@ -34,7 +35,8 @@ def upload_file():
         file_type=file_type,
         author=author,
         publisher=publisher,
-        year=year
+        year=year,
+        department=department
     )
     db.session.add(new_upload)
     db.session.commit()

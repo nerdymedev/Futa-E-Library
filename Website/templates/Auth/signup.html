@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Back</title>
+    <title>Sign Up</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         .flash-messages {
@@ -69,42 +69,87 @@
     
     <!-- Main Content -->
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-        <h2 class="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
         
-        <!-- Login Form -->
-        <form id="loginForm" class="space-y-6" method="post" action="{{ url_for('auth.login') }}">
+        <!-- Signup Form -->
+        <form id="signupForm" class="space-y-6" method="post" action="{{ url_for('auth.signup') }}">
             <div>
-                <label for="regNo" class="block text-sm font-medium text-gray-700">Registration No. / Email</label>
-                <input id="regNo" name="regNo" type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input id="email" name="email" type="email" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
+            <div>
+                <label for="fullname" class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input id="fullname" name="fullname" type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="regNoPrefix" class="block text-sm font-medium text-gray-700">Registration No.</label>
+                <div class="flex space-x-2 mt-1">
+                    <select id="regNoPrefix" name="regNoPrefix" class="block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="IFT">IFT</option>
+                        <option value="CSC">CSC</option>
+                        <option value="IFS">IFS</option>
+                        <option value="CYS">CYS</option>
+                    </select>
+                    <select id="regNoYear" name="regNoYear" class="block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                    </select>
+                    <input id="regNoSuffix" name="regNoSuffix" type="text" maxlength="4" class="block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="0001">
+                </div>
+            </div>
+            <input type="hidden" id="fullRegNo" name="fullRegNo">
+            <input type="hidden" id="department" name="department">
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <input id="password" name="password" type="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
-            <div class="flex items-center justify-between">
-                <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500">Forgot Password?</a>
-            </div>
-            <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Login</button>
-            <button type="button" onclick="signup()" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign up</button>
-
+            <p class="text-sm">Registered User? <a href="/login" class="text-sm text-indigo-600 hover:text-indigo-500">Login</a></p>
+            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign Up</button>
         </form>
     </div>
 
-    <!-- Script to handle flash message dismissal -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const closeButtons = document.querySelectorAll('.close-btn');
-            closeButtons.forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    const alertBar = this.closest('.alert-bar');
-                    alertBar.style.display = 'none'; // Hide the alert bar
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.close-btn').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const category = button.getAttribute('data-category');
+                    const alertBar = document.querySelector(`.alert-bar[data-category="${category}"]`);
+                    if (alertBar) {
+                        alertBar.remove();
+                    }
                 });
             });
         });
 
-        function signup(){
-            window.location.href = "{{ url_for('auth.signup') }}";
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('signupForm');
+            const regNoPrefix = document.getElementById('regNoPrefix');
+            const regNoYear = document.getElementById('regNoYear');
+            const regNoSuffix = document.getElementById('regNoSuffix');
+            const fullRegNo = document.getElementById('fullRegNo');
+            const department = document.getElementById('department');
+        
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Combine registration number parts
+                fullRegNo.value = `${regNoPrefix.value}/${regNoYear.value}/${regNoSuffix.value.padStart(4, '0')}`;
+                
+                // Set department to the selected prefix
+                department.value = regNoPrefix.value;
+                
+                // Submit the form
+                this.submit();
+            });
+        });
+        
     </script>
 </body>
 </html>

@@ -5,6 +5,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
 from .models import User
 from . import db
+from werkzeug.security import generate_password_hash
 
 auth = Blueprint('auth', __name__)
 
@@ -30,6 +31,48 @@ def login():
             flash('Invalid credentials. Please try again.', 'error')
 
     return render_template('/Auth/index.html')
+
+
+@auth.route('/sign_up', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        full_name = request.form.get('fullname')
+        full_reg_no = request.form.get('fullRegNo')
+        department = request.form.get('department')
+        password = request.form.get('password')
+
+        # Check if user already exists
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash('Email address already exists', 'error')
+            return redirect(url_for('auth.signup'))
+
+        # Create new user
+        new_user = User(
+            email=email,
+            reg_no=full_reg_no,
+            full_name=full_name,
+            department=department,
+            password_hash=generate_password_hash(password, method='scrypt'),
+            role='student'  #  set role to 'student'
+        )
+
+        # Add new user to the database
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Account created successfully', 'success')
+            login_user(new_user)
+            return redirect(url_for('views.index'))  # Redirect to dashboard or home page
+        except Exception as e:
+            db.session.rollback()
+            flash('An error occurred. Please try again.', 'error')
+            print(str(e))  # Log the error for debugging
+            return redirect(url_for('auth.signup'))
+
+    # If it's a GET request, just render the signup form
+    return render_template('Auth/signup.html')
 
 @auth.route('/logout')
 @login_required

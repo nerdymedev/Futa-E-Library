@@ -15,10 +15,8 @@ def get_user_details():
     if user:
         return jsonify({
             'email': user.email,
-            'name': f"{user.surname} {user.other_names}",
+            'name': user.full_name,
             'department': user.department,
-            'level': user.level,
-            'year': user.year
         })
     return jsonify({'error': 'User not found'}), 404
 

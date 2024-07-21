@@ -31,14 +31,12 @@ def create_app():
     
     from .views import views
     from .auth import auth  
-    from .email import email
     from .borrow import borrow
     from .upload import upload
     
        
     
     app.register_blueprint(borrow,url_prefix='/')
-    app.register_blueprint(email,url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(upload,url_prefix='/')
@@ -54,12 +52,9 @@ def create_app():
             # Create the admin user
             admin_user = User(
                 email='Admin@gmail.com',
-                reg_no='000001',
-                surname='Admin',
-                other_names='Super',
+                reg_no='The Admin',
+                full_name='Scriptpythonic',
                 department='Admin Department',
-                level=0,
-                year=2024,
                 password_hash=hashed_password,
                 role='Super Admin'
             )

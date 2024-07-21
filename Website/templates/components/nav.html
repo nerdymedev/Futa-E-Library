@@ -9,122 +9,108 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .button-group button {
-            transition: background-color 0.3s, transform 0.3s;
+        .nav-link {
+            transition: color 0.3s;
         }
-        .button-group button:hover {
-            background-color: #4a5568;
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .nav-link:hover {
+            color: #3B82F6;
         }
-        .flash-message {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1000;
-            width: auto;
-            max-width: 300px;
-            transition: all 0.5s ease-in-out;
+        .hamburger {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            transition: all 0.25s;
+            position: relative;
         }
-       
-        input:focus {
-            outline: none;
-            border: 1.5px solid rgba(59, 130, 246);
+        .hamburger-top,
+        .hamburger-middle,
+        .hamburger-bottom {
+            position: absolute;
+            width: 24px;
+            height: 2px;
+            top: 0;
+            left: 0;
+            background: #000;
+            transform: rotate(0);
+            transition: all 0.5s;
+        }
+        .hamburger-middle {
+            transform: translateY(7px);
+        }
+        .hamburger-bottom {
+            transform: translateY(14px);
+        }
+        .open {
+            transform: rotate(90deg);
+        }
+        .open .hamburger-top {
+            transform: rotate(45deg) translateY(6px) translateX(6px);
+        }
+        .open .hamburger-middle {
+            display: none;
+        }
+        .open .hamburger-bottom {
+            transform: rotate(-45deg) translateY(6px) translateX(-6px);
         }
     </style>
     {% block style %}{% endblock style %}
 </head>
 <body class="bg-gray-100">
     <nav class="bg-white shadow-md fixed top-0 w-full z-10">
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div class="relative flex items-center justify-between h-16">
-                <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false" onclick="toggleMenu()">
-                        <span class="sr-only">Open main menu</span>
-                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <img class="h-8 w-auto" src="https://via.placeholder.com/150" alt="Library Logo">
                 </div>
-                <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                    <div class="flex-shrink-0">
-                        <img class="h-8 w-auto" src="https://via.placeholder.com/150" alt="Library Logo">
-                    </div>
-                    <div class="hidden sm:block sm:ml-6">
-                        <div class="flex space-x-4">
-                            <a href="/" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        {% if current_user.is_authenticated and current_user.role in ['admin','Super Admin'] %}
-                            <a href="/add_user" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Registration</a>
-                            <a href="/return_book" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-sm font-medium">Recieved</a>
-
-                          {% endif  %}
-                            <a href="/profile" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
-                            {% if current_user.is_authenticated %}
-                                {% set url = url_for('views.borrowed_book') if current_user.role in ['admin', 'Super Admin'] else url_for('borrow.student_dashboard') %}
-                                <a href="{{ url }}" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                                    {% if current_user.role in ['admin', 'super admin'] %}
-                                        Borrowed Book
-                                    {% else %}
-                                       Borrowed Book
-                                    {% endif %}
-                                </a>
-                            {% endif %}
-                            <a href="/logout" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
-                        </div>
-                    </div>
+                <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-4">
+                    <a href="/" class="nav-link text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    {% if current_user.is_authenticated and current_user.role in ['admin','Super Admin'] %}
+                        <a href="/return_book" class="nav-link text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Received</a>
+                    {% endif %}
+                    <a href="/profile" class="nav-link text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                    {% if current_user.is_authenticated %}
+                        {% set url = url_for('views.borrowed_book') if current_user.role in ['admin', 'Super Admin'] else url_for('borrow.student_dashboard') %}
+                        <a href="{{ url }}" class="nav-link text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Borrowed Book</a>
+                    {% endif %}
+                    <a href="/logout" class="nav-link text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+                </div>
+                <div class="sm:hidden flex items-center">
+                    <button id="menu-btn" class="hamburger focus:outline-none">
+                        <span class="hamburger-top"></span>
+                        <span class="hamburger-middle"></span>
+                        <span class="hamburger-bottom"></span>
+                    </button>
                 </div>
             </div>
         </div>
         <div class="sm:hidden hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="/" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
-                {% if current_user.is_authenticated and current_user.role in ['admin','Super Admin']  %}
-                <a href="/add_user" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Registration</a>
-                <a href="/return_book" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Recieved</a>
+                <a href="/" class="nav-link block text-gray-700 px-3 py-2 rounded-md text-base font-medium">Home</a>
+                {% if current_user.is_authenticated and current_user.role in ['admin','Super Admin'] %}
+                    <a href="/return_book" class="nav-link block text-gray-700 px-3 py-2 rounded-md text-base font-medium">Received</a>
                 {% endif %}
-                <a href="/profile" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+                <a href="/profile" class="nav-link block text-gray-700 px-3 py-2 rounded-md text-base font-medium">Profile</a>
                 {% if current_user.is_authenticated %}
                     {% set url = url_for('views.borrowed_book') if current_user.role in ['admin', 'Super Admin'] else url_for('borrow.student_dashboard') %}
-                    <a href="{{ url }}" class="text-gray-700 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                        {% if current_user.role in ['admin', 'super admin'] %}
-                            Borrowed Book
-                        {% else %}
-                            Borrowed Book
-                        {% endif %}
-                    </a>
-                    {% endif %}
-                <a href="/logout" class="text-gray-700 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
+                    <a href="{{ url }}" class="nav-link block text-gray-700 px-3 py-2 rounded-md text-base font-medium">Borrowed Book</a>
+                {% endif %}
+                <a href="/logout" class="nav-link block text-gray-700 px-3 py-2 rounded-md text-base font-medium">Logout</a>
             </div>
         </div>
     </nav>
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="flash-message space-y-2">
-            {% for category, message in messages %}
-                <div class="bg-{{ 'green' if category == 'success' else 'red' }}-100 border border-{{ 'green' if category == 'success' else 'red' }}-400 text-{{ 'green' if category == 'success' else 'red' }}-700 px-4 py-3 rounded relative" role="alert">
-                    <strong class="font-bold">{{ category | capitalize }}</strong>
-                    <span class="block sm:inline">{{ message }}</span>
-                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                        <svg class="fill-current h-6 w-6 text-{{ 'green' if category == 'success' else 'red' }}-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" onclick="this.parentElement.parentElement.style.display='none';"><title>Close</title><path d="M14.348 5.652a.5.5 0 1 0-.696-.718L10 9.282l-3.652-4.348a.5.5 0 0 0-.696.718l4 4.75a.5.5 0 0 0 .696 0l4-4.75z"/></svg>
-                    </span>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% endwith %}
+
     {% block content %}
     
     {% endblock content %}
+
     <script>
-        function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            btn.classList.toggle('open');
             menu.classList.toggle('hidden');
-        }
+        });
     </script>
 </body>
 </html>
