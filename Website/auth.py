@@ -42,6 +42,15 @@ def signup():
         department = request.form.get('department')
         password = request.form.get('password')
 
+        # Validate input values
+        if not email or not full_name or not full_reg_no or not department or not password:
+            flash('All fields are required.', 'error')
+            return redirect(url_for('auth.signup'))
+
+        if len(password) < 5:
+            flash('Password must be at least 5 characters long.', 'error')
+            return redirect(url_for('auth.signup'))
+
         # Check if user already exists
         user = User.query.filter_by(email=email).first()
         if user:
@@ -55,7 +64,7 @@ def signup():
             full_name=full_name,
             department=department,
             password_hash=generate_password_hash(password, method='scrypt'),
-            role='student'  #  set role to 'student'
+            role='student'  # set role to 'student'
         )
 
         # Add new user to the database
@@ -64,7 +73,7 @@ def signup():
             db.session.commit()
             flash('Account created successfully', 'success')
             login_user(new_user)
-            return redirect(url_for('views.index'))  # Redirect to dashboard or home page
+            return redirect(url_for('views.home'))  # Redirect to dashboard or home page
         except Exception as e:
             db.session.rollback()
             flash('An error occurred. Please try again.', 'error')
