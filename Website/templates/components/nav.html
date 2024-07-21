@@ -60,7 +60,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <img class="h-8 w-auto" src="https://via.placeholder.com/150" alt="Library Logo">
+                    <img class="h-8 w-auto" src="{{ url_for('static',filename='futa.jfif')}}" alt="Library Logo">
                 </div>
                 <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-4">
                     <a href="/" class="nav-link text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
@@ -98,6 +98,20 @@
             </div>
         </div>
     </nav>
+
+    <div class="pt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="space-y-4">
+                    {% for category, message in messages %}
+                        <div class="p-4 mb-4 text-sm text-white {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }} rounded">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
 
     {% block content %}
     
